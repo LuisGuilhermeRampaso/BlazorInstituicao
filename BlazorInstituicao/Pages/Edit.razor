@@ -1,0 +1,48 @@
+﻿@page "/edit/{id}"
+@using BlazorInstituicao.Models
+@using BlazorInstituicao.Services
+
+<h3>Editar Instituição</h3>
+
+@if (instituicao == null)
+{
+    <p>Instituição não encontrada.</p>
+}
+else if (salvo)
+{
+    <p>Instituição editada com sucesso!</p>
+}
+else
+{
+    <div>
+        <label for="nome">Nome:</label>
+        <input id="nome" @bind="instituicao.Nome" />
+    </div>
+    <div>
+        <label for="endereco">Endereço:</label>
+        <input id="endereco" @bind="instituicao.Endereco" />
+    </div>
+    <button @onclick="SaveInstituicao">Salvar</button>
+}
+
+@code {
+    [Inject]
+    private BlazorInstituicaoService BlazorInstituicaoService { get; set; }
+
+    [Parameter]
+    public string Id { get; set; }
+
+    private Instituicao instituicao;
+    private bool salvo = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        instituicao = await BlazorInstituicaoService.GetInstituicaoAsync(Id);
+    }
+
+    private async Task SaveInstituicao()
+    {
+        await BlazorInstituicaoService.UpdateInstituicaoAsync(instituicao);
+        salvo = true;
+    }
+}

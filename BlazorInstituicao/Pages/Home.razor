@@ -1,0 +1,57 @@
+﻿@page "/"
+@using BlazorInstituicao.Services
+@using BlazorInstituicao.Models
+
+<h3>Lista de Instituições</h3>
+
+@if (instituicoes == null)
+{
+    <p>Carregando...</p>
+}
+else if (!instituicoes.Any())
+{
+    <p>Nenhuma instituição encontrada.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Endereço</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var instituicao in instituicoes)
+            {
+                <tr>
+                    <td>@instituicao.InstituicaoID</td>
+                    <td>@instituicao.Nome</td>
+                    <td>@instituicao.Endereco</td>
+                    <td>
+                        <a href="@($"edit/{instituicao.InstituicaoID}")">Editar</a> |
+                        <a href="@($"details/{instituicao.InstituicaoID}")">Detalhes</a> |
+                        <a href="@($"delete/{instituicao.InstituicaoID}")">Excluir</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Botão para criar uma nova instituição -->
+    <a href="/create" class="btn btn-primary">Criar Nova Instituição</a>
+}
+
+@code {
+    [Inject]
+    private BlazorInstituicaoService BlazorInstituicaoService { get; set; }
+
+    private IEnumerable<Instituicao> instituicoes;
+
+    protected override async Task OnInitializedAsync()
+    {
+        instituicoes = await BlazorInstituicaoService.GetInstituicoesAsync();
+    }
+}

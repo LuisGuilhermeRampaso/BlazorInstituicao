@@ -1,0 +1,37 @@
+﻿@page "/create"
+@using BlazorInstituicao.Models
+@using BlazorInstituicao.Services
+@inject NavigationManager NavigationManager
+
+<h3>Criar Nova Instituição</h3>
+
+<div>
+    <label for="nome">Nome:</label>
+    <input id="nome" @bind="instituicao.Nome" />
+</div>
+<div>
+    <label for="endereco">Endereço:</label>
+    <input id="endereco" @bind="instituicao.Endereco" />
+</div>
+<div>
+    <button @onclick="CreateInstituicao">Criar</button>
+    <button @onclick="Cancelar">Cancelar</button>
+</div>
+
+@code {
+    [Inject]
+    private BlazorInstituicaoService BlazorInstituicaoService { get; set; }
+
+    private Instituicao instituicao = new Instituicao();
+
+    private async Task CreateInstituicao()
+    {
+        await BlazorInstituicaoService.CreateInstituicaoAsync(instituicao);
+        NavigationManager.NavigateTo("/");
+    }
+
+    private void Cancelar()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}

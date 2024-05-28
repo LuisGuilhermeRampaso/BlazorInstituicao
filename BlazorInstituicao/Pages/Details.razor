@@ -1,0 +1,36 @@
+﻿@page "/details/{id}"
+@using BlazorInstituicao.Models
+@using BlazorInstituicao.Services
+
+<h3>Detalhes da Instituição</h3>
+
+@if (instituicao == null)
+{
+    <p>Instituição não encontrada.</p>
+}
+else
+{
+    <dl>
+        <dt>ID:</dt>
+        <dd>@instituicao.InstituicaoID</dd>
+        <dt>Nome:</dt>
+        <dd>@instituicao.Nome</dd>
+        <dt>Endereço:</dt>
+        <dd>@instituicao.Endereco</dd>
+    </dl>
+}
+
+@code {
+    [Inject]
+    private BlazorInstituicaoService BlazorInstituicaoService { get; set; }
+
+    [Parameter]
+    public string Id { get; set; }
+
+    private Instituicao instituicao;
+
+    protected override async Task OnInitializedAsync()
+    {
+        instituicao = await BlazorInstituicaoService.GetInstituicaoAsync(Id);
+    }
+}

@@ -1,0 +1,56 @@
+﻿@page "/delete/{id}"
+@using BlazorInstituicao.Models
+@using BlazorInstituicao.Services
+@inject NavigationManager NavigationManager
+
+<h3>Excluir Instituição</h3>
+
+@if (instituicao == null)
+{
+    <p>Instituição não encontrada.</p>
+}
+else if (confirmacao)
+{
+    <p>Instituição excluída com sucesso!</p>
+}
+else
+{
+    <dl>
+        <dt>ID:</dt>
+        <dd>@instituicao.InstituicaoID</dd>
+        <dt>Nome:</dt>
+        <dd>@instituicao.Nome</dd>
+        <dt>Endereço:</dt>
+        <dd>@instituicao.Endereco</dd>
+    </dl>
+    <button @onclick="DeleteInstituicao">Excluir</button>
+    <button @onclick="Cancelar">Cancelar</button>
+}
+
+@code {
+    [Inject]
+    private BlazorInstituicaoService BlazorInstituicaoService { get; set; }
+
+    [Parameter]
+    public string Id { get; set; }
+
+    private Instituicao instituicao;
+    private bool confirmacao = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        instituicao = await BlazorInstituicaoService.GetInstituicaoAsync(Id);
+    }
+
+    private async Task DeleteInstituicao()
+    {
+        await BlazorInstituicaoService.DeleteInstituicaoAsync((int)instituicao.InstituicaoID);
+
+        confirmacao = true;
+    }
+
+    private void Cancelar()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}
